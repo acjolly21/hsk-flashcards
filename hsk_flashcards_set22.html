@@ -1,0 +1,5265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK Flashcards - Set 22</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .filter-info {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            outline: none;
+        }
+        
+        .flashcard-container {
+            width: 350px;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+        
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .chinese-char {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 140px;
+            color: #2d3748;
+            margin-bottom: 40px;
+            line-height: 1;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+            margin-top: -20px;
+        }
+        
+        .hidden-area {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .cover-button {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cover-button:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+        
+        .cover-button:active {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .cover-button.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-50%) scale(0.8);
+        }
+        
+        .cover-icon {
+            font-size: 28px;
+        }
+        
+        .cover-text {
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        
+        .reveal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            width: 100%;
+        }
+        
+        .reveal-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .pinyin {
+            font-size: 32px;
+            color: #667eea;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .english {
+            font-size: 18px;
+            color: #4a5568;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1.4;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 14px;
+            color: #a0aec0;
+            font-weight: 600;
+        }
+        
+        .level-badge {
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            font-size: 11px;
+            color: white;
+            background: #48bb78;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .freq-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 25px;
+            font-size: 11px;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #cbd5e0;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 700px;
+        }
+        
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .reveal-all-btn {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .hide-all-btn {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .shuffle-btn {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .toggle-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .progress {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .stats {
+            color: rgba(255,255,255,0.9);
+            font-size: 13px;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .jump-input {
+            width: 50px;
+            padding: 8px;
+            border: none;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .grid-view {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+        
+        .grid-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grid-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .grid-card .chinese-char {
+            font-size: 55px;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+        
+        .grid-level {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 10px;
+            background: #48bb78;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .grid-cover-btn {
+            width: 100%;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .grid-cover-btn.hidden {
+            display: none;
+        }
+        
+        .grid-reveal-content {
+            margin-top: 10px;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .grid-reveal-content.visible {
+            opacity: 1;
+            height: auto;
+        }
+        
+        .grid-card .pinyin {
+            font-size: 18px;
+            margin-bottom: 6px;
+            color: #667eea;
+        }
+        
+        .grid-card .english {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.3;
+        }
+        
+        @media (max-width: 600px) {
+            .flashcard-container {
+                width: 320px;
+                height: 460px;
+            }
+            .chinese-char {
+                font-size: 100px;
+            }
+            .cover-button {
+                width: 260px;
+                height: 110px;
+            }
+            .english {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🀄 HSK Flashcards - Set 22</h1>
+    <div class="filter-info" id="filterInfo">HSK Vocabulary Deck (Surnames Excluded)</div>
+    
+    <!--
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search English, Chinese, or Pinyin..." onkeyup="searchCards()">
+    </div>
+    -->
+    
+    <div class="progress" id="progress">Card 1 of 500</div>
+    <div class="stats" id="stats">Revealed: 0/500 | Space=Reveal • ←→=Navigate</div>
+    
+    <div class="flashcard-container" id="cardContainer">
+        <div class="flashcard" id="flashcard">
+            <div class="level-badge" id="levelBadge">HSK 1</div>
+            <div class="card-number" id="cardNumber">1/500</div>
+            <div class="chinese-char" id="chineseChar">爱</div>
+            
+            <div class="hidden-area">
+                <button class="cover-button" id="coverBtn" onclick="revealAnswer(event)">
+                    <span class="cover-icon">👆</span>
+                    <span class="cover-text">Tap to Reveal</span>
+                </button>
+                
+                <div class="reveal-content" id="revealContent">
+                    <div class="pinyin" id="pinyin">ài</div>
+                    <div class="english" id="english">Love</div>
+                </div>
+            </div>
+            
+            <div class="freq-badge" id="freqBadge">#1</div>
+            <div class="hint">Press Space to reveal answer</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="prevCard(event)">← Prev</button>
+        <button onclick="nextCard(event)">Next →</button>
+        <input type="number" class="jump-input" id="jumpInput" placeholder="#" min="1" max="500" onkeypress="jumpToCard(event)">
+        <button onclick="jumpToCardButton(event)">Go</button>
+        <button class="reveal-all-btn" onclick="revealAll(event)">👁 All</button>
+        <button class="hide-all-btn" onclick="hideAll(event)">🔄 Reset</button>
+        <button class="shuffle-btn" onclick="shuffleCards(event)">🔀 Shuffle</button>
+        <button class="toggle-btn" onclick="toggleView(event)">📋 Grid</button>
+    </div>
+    
+    <div class="grid-view" id="gridView"></div>
+
+    <script>
+        const flashcardsData = [
+  {
+    "en": "lit. not to know whether to laugh or cry (idiom); both funny and extremely embarrassing; between laughter and tears",
+    "cn": "哭笑不得",
+    "py": "kū xiào bù dé",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27338
+  },
+  {
+    "en": "anxiety; sore point; secret worry; mental disorder; heart disease (medicine)",
+    "cn": "心病",
+    "py": "xīn bìng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27340
+  },
+  {
+    "en": "pliers; pincers; tongs; forceps; vise; clamp; claw (of a crab etc); (dialect) earring",
+    "cn": "钳子",
+    "py": "qián zi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27353
+  },
+  {
+    "en": "drill; practice",
+    "cn": "操练",
+    "py": "cāo liàn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27364
+  },
+  {
+    "en": "to be flustered; (dialect) irregular heart-beat",
+    "cn": "心慌",
+    "py": "xīn huāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27384
+  },
+  {
+    "en": "(idiom) conscientious; assiduous",
+    "cn": "兢兢业业",
+    "py": "jīng jīng yè yè",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 27396
+  },
+  {
+    "en": "great waves; billows",
+    "cn": "波涛",
+    "py": "bō tāo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27414
+  },
+  {
+    "en": "politely; solicitously; eagerly attentive",
+    "cn": "殷勤",
+    "py": "yīn qín",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27419
+  },
+  {
+    "en": "firmly; resolutely; without hesitation",
+    "cn": "毅然",
+    "py": "yì rán",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 27444
+  },
+  {
+    "en": "scenic area",
+    "cn": "景区",
+    "py": "jǐng qū",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27449
+  },
+  {
+    "en": "food market",
+    "cn": "菜市场",
+    "py": "cài shì chǎng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27462
+  },
+  {
+    "en": "striving to be first and fearing to be last (idiom); outdoing one another",
+    "cn": "争先恐后",
+    "py": "zhēng xiān kǒng hòu",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 27476
+  },
+  {
+    "en": "with astonishment; with a shock; awe-inspiringly; impressively; furiously (angry)",
+    "cn": "赫然",
+    "py": "hè rán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27483
+  },
+  {
+    "en": "to cower by military force; deterrence",
+    "cn": "威慑",
+    "py": "wēi shè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27484
+  },
+  {
+    "en": "mirroring others; identical",
+    "cn": "雷同",
+    "py": "léi tóng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27498
+  },
+  {
+    "en": "to push oneself forward; to seek fame; to be in the limelight; same as 出锋头",
+    "cn": "出风头",
+    "py": "chū fēng tou",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27500
+  },
+  {
+    "en": "milliliter",
+    "cn": "毫升",
+    "py": "háo shēng",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 27507
+  },
+  {
+    "en": "loser (as opposed to winner 赢家)",
+    "cn": "输家",
+    "py": "shū jiā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27508
+  },
+  {
+    "en": "healthy atmosphere; moral spirit; unyielding integrity; probity; (TCM) vital energy (resistance to diseases)",
+    "cn": "正气",
+    "py": "zhèng qì",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27510
+  },
+  {
+    "en": "great kindness; magnificent hospitality",
+    "cn": "盛情",
+    "py": "shèng qíng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27521
+  },
+  {
+    "en": "the Doctrine of the Mean, one of the Four Books 四书",
+    "cn": "中庸",
+    "py": "Zhōng yōng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27576
+  },
+  {
+    "en": "(Buddhism) Yama, the King of Hell; (fig.) cruel and tyrannical person",
+    "cn": "阎王",
+    "py": "Yán wáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27587
+  },
+  {
+    "en": "provincial capital",
+    "cn": "省会",
+    "py": "shěng huì",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27605
+  },
+  {
+    "en": "Xiaokang, a Confucian near-ideal state of society, second only to Datong 同",
+    "cn": "小康",
+    "py": "Xiǎo kāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27618
+  },
+  {
+    "en": "to signal the musicians (in Chinese opera, by prolonging a spoken word before attacking a song); (coll.) to challenge",
+    "cn": "叫板",
+    "py": "jiào bǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27620
+  },
+  {
+    "en": "different mouths, same voice; to speak in unison (idiom)",
+    "cn": "异口同声",
+    "py": "yì kǒu tóng shēng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27668
+  },
+  {
+    "en": "to make sth of oneself; to become a person who is worthy of respect",
+    "cn": "成才",
+    "py": "chéng cái",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27672
+  },
+  {
+    "en": "to analyze; to try to figure out; to try to fathom",
+    "cn": "揣摩",
+    "py": "chuǎi mó",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27678
+  },
+  {
+    "en": "a musical score; sheet music",
+    "cn": "乐谱",
+    "py": "yuè pǔ",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27699
+  },
+  {
+    "en": "public security bureau (government office similar in function to a police station)",
+    "cn": "公安局",
+    "py": "gōng ān jú",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 27713
+  },
+  {
+    "en": "pocket-sized; pocket (book etc)",
+    "cn": "袖珍",
+    "py": "xiù zhēn",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 27717
+  },
+  {
+    "en": "inextricably linked (idiom); inseparable",
+    "cn": "密不可分",
+    "py": "mì bù kě fēn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27738
+  },
+  {
+    "en": "to cut the ribbon (at a launching or opening ceremony)",
+    "cn": "剪彩",
+    "py": "jiǎn cǎi",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27750
+  },
+  {
+    "en": "myriad; all kinds of; all sorts of",
+    "cn": "五花八门",
+    "py": "wǔ huā bā mén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27751
+  },
+  {
+    "en": "painful heat; scorching; painful heat; rude and forthright; provocative; hot; sexy",
+    "cn": "火辣辣",
+    "py": "huǒ là là",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27799
+  },
+  {
+    "en": "third in a race; bronze medalist",
+    "cn": "季军",
+    "py": "jì jūn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27804
+  },
+  {
+    "en": "to journey to India on a quest for the Buddhist scriptures; to learn by studying another's experience",
+    "cn": "取经",
+    "py": "qǔ jīng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27807
+  },
+  {
+    "en": "to stammer; to stutter; Taiwan pr. [kǒu jí]",
+    "cn": "口吃",
+    "py": "kǒu chī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27809
+  },
+  {
+    "en": "unable to take one's eyes off (idiom); to gaze steadily; to stare",
+    "cn": "目不转睛",
+    "py": "mù bù zhuǎn jīng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27819
+  },
+  {
+    "en": "routine; everyday business; daily operation (of a company)",
+    "cn": "常务",
+    "py": "cháng wù",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 27826
+  },
+  {
+    "en": "continuous; unbroken; uninterrupted; extending forever into the distance (of mountain range, river etc)",
+    "cn": "连绵",
+    "py": "lián mián",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27852
+  },
+  {
+    "en": "sporting venue; arena",
+    "cn": "场馆",
+    "py": "chǎng guǎn",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 27863
+  },
+  {
+    "en": "to punish; to administer justice",
+    "cn": "惩处",
+    "py": "chéng chǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27875
+  },
+  {
+    "en": "sudden huge profits",
+    "cn": "暴利",
+    "py": "bào lì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27880
+  },
+  {
+    "en": "original; authentic",
+    "cn": "原汁原味",
+    "py": "yuán zhī yuán wèi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27889
+  },
+  {
+    "en": "dairy products",
+    "cn": "乳制品",
+    "py": "rǔ zhì pǐn",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 27890
+  },
+  {
+    "en": "painstaking effort; to take a lot of trouble; laborious at pains",
+    "cn": "苦心",
+    "py": "kǔ xīn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27893
+  },
+  {
+    "en": "all-inclusive; undiscriminating",
+    "cn": "一揽子",
+    "py": "yī lǎn zi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27919
+  },
+  {
+    "en": "satellite TV (abbr. for 卫星电视)",
+    "cn": "卫视",
+    "py": "wèi shì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27956
+  },
+  {
+    "en": "fickle and impatient; restless; giddy; scatterbrained",
+    "cn": "浮躁",
+    "py": "fú zào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27975
+  },
+  {
+    "en": "spirit weary, strength exhausted (idiom); spent; drained; washed out",
+    "cn": "精疲力竭",
+    "py": "jīng pí lì jié",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 27998
+  },
+  {
+    "en": "incorruptible; unbribable; honest",
+    "cn": "廉洁",
+    "py": "lián jié",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28006
+  },
+  {
+    "en": "willow",
+    "cn": "柳树",
+    "py": "liǔ shù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28007
+  },
+  {
+    "en": "cheers and laughter",
+    "cn": "欢声笑语",
+    "py": "huān shēng xiào yǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28045
+  },
+  {
+    "en": "helmsman",
+    "cn": "舵手",
+    "py": "duò shǒu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28050
+  },
+  {
+    "en": "exceptionally; not one's responsibility or job",
+    "cn": "分外",
+    "py": "fèn wài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28084
+  },
+  {
+    "en": "roast duck",
+    "cn": "烤鸭",
+    "py": "kǎo yā",
+    "levels": [
+      "new-5",
+      "old-5"
+    ],
+    "freq": 28090
+  },
+  {
+    "en": "exam room",
+    "cn": "考场",
+    "py": "kǎo chǎng",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 28097
+  },
+  {
+    "en": "border area; borderland; frontier; frontier region",
+    "cn": "边疆",
+    "py": "biān jiāng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28113
+  },
+  {
+    "en": "precipitous",
+    "cn": "陡峭",
+    "py": "dǒu qiào",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28114
+  },
+  {
+    "en": "to strikingly resemble",
+    "cn": "酷似",
+    "py": "kù sì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28114
+  },
+  {
+    "en": "simple; plain; unadorned; unaffected; unsophisticated; rustic; earthy",
+    "cn": "质朴",
+    "py": "zhì pǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28126
+  },
+  {
+    "en": "to treat sb unfairly",
+    "cn": "亏待",
+    "py": "kuī dài",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28145
+  },
+  {
+    "en": "restaurant",
+    "cn": "酒楼",
+    "py": "jiǔ lóu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28158
+  },
+  {
+    "en": "to investigate; dialectical",
+    "cn": "辩证",
+    "py": "biàn zhèng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28181
+  },
+  {
+    "en": "to think over",
+    "cn": "推敲",
+    "py": "tuī qiāo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28185
+  },
+  {
+    "en": "variant of 驮",
+    "cn": "驮",
+    "py": "tuó",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28188
+  },
+  {
+    "en": "broad sense; general sense",
+    "cn": "广义",
+    "py": "guǎng yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28194
+  },
+  {
+    "en": "sth one wishes to keep secret; ulterior motive; a subject best avoided",
+    "cn": "隐情",
+    "py": "yǐn qíng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28207
+  },
+  {
+    "en": "pull-top can; easy-open can (with ring-pull)",
+    "cn": "易拉罐",
+    "py": "yì lā guàn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28228
+  },
+  {
+    "en": "to take over (from those working the previous shift); to take over (in a leadership role etc); to succeed sb",
+    "cn": "接班",
+    "py": "jiē bān",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28231
+  },
+  {
+    "en": "fertile",
+    "cn": "肥沃",
+    "py": "féi wò",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28240
+  },
+  {
+    "en": "off season; slow business season; see also 季",
+    "cn": "淡季",
+    "py": "dàn jì",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28264
+  },
+  {
+    "en": "dense; thick; strong; rich (colors); heavy (aroma); deep (friendship); profound (effect)",
+    "cn": "浓重",
+    "py": "nóng zhòng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28270
+  },
+  {
+    "en": "daily renewal, monthly change (idiom); every day sees new developments; rapid progress",
+    "cn": "日新月异",
+    "py": "rì xīn yuè yì",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28296
+  },
+  {
+    "en": "to decline (an appointment, invitation etc)",
+    "cn": "推辞",
+    "py": "tuī cí",
+    "levels": [
+      "new-7",
+      "old-5"
+    ],
+    "freq": 28333
+  },
+  {
+    "en": "ambition; resolve; backbone; drive; spirit",
+    "cn": "志气",
+    "py": "zhì qì",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28346
+  },
+  {
+    "en": "flood; flood damage",
+    "cn": "水灾",
+    "py": "shuǐ zāi",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 28359
+  },
+  {
+    "en": "to rumble with thunder; clap of thunder",
+    "cn": "打雷",
+    "py": "dǎ léi",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 28360
+  },
+  {
+    "en": "outline; synopsis; notes",
+    "cn": "提纲",
+    "py": "tí gāng",
+    "levels": [
+      "old-5"
+    ],
+    "freq": 28361
+  },
+  {
+    "en": "lifeline",
+    "cn": "生命线",
+    "py": "shēng mìng xiàn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28405
+  },
+  {
+    "en": "night and day (idiom); continuous strenuous effort",
+    "cn": "夜以继日",
+    "py": "yè yǐ jì rì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28406
+  },
+  {
+    "en": "to go for an outing; to go on an excursion",
+    "cn": "郊游",
+    "py": "jiāo yóu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28410
+  },
+  {
+    "en": "high tech; high technology",
+    "cn": "高科技",
+    "py": "gāo kē jì",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 28429
+  },
+  {
+    "en": "ballpoint pen",
+    "cn": "圆珠笔",
+    "py": "yuán zhū bǐ",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 28444
+  },
+  {
+    "en": "contrast; discrepancy",
+    "cn": "反差",
+    "py": "fǎn chā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28447
+  },
+  {
+    "en": "lush",
+    "cn": "茂盛",
+    "py": "mào shèng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28450
+  },
+  {
+    "en": "variant of 贤慧",
+    "cn": "贤惠",
+    "py": "xián huì",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28468
+  },
+  {
+    "en": "to pursue a goal with determination; inspirational; motivational",
+    "cn": "励志",
+    "py": "lì zhì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28471
+  },
+  {
+    "en": "shocking; horrifying; atrocious; terrible",
+    "cn": "骇人听闻",
+    "py": "hài rén tīng wén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28491
+  },
+  {
+    "en": "sparkling and translucent",
+    "cn": "晶莹",
+    "py": "jīng yíng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28494
+  },
+  {
+    "en": "pavement; sidewalk; shortcut; makeshift road",
+    "cn": "便道",
+    "py": "biàn dào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28502
+  },
+  {
+    "en": "to mourn; to pay last respects",
+    "cn": "追悼",
+    "py": "zhuī dào",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28513
+  },
+  {
+    "en": "to conform (with); to echo; to correlate well; (linguistics) agreement",
+    "cn": "呼应",
+    "py": "hū yìng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28524
+  },
+  {
+    "en": "one's two hands; two prongs (of a strategy); both aspects, eventualities etc; skills; expertise",
+    "cn": "两手",
+    "py": "liǎng shǒu",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 28543
+  },
+  {
+    "en": "to dig up; to appear in an excavation; unearthed; to come up out of the ground",
+    "cn": "出土",
+    "py": "chū tǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28546
+  },
+  {
+    "en": "hospitality; to treat guests well; to enjoy having guests; hospitable; friendly",
+    "cn": "好客",
+    "py": "hào kè",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28557
+  },
+  {
+    "en": "not to accept sth; to want to have sth overruled or changed; to refuse to obey or comply; to refuse to accept as final; to remain unconvinced by; not to give in to",
+    "cn": "不服",
+    "py": "bù fú",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28565
+  },
+  {
+    "en": "to register (at a hospital etc); to send by registered mail",
+    "cn": "挂号",
+    "py": "guà hào",
+    "levels": [
+      "new-7",
+      "old-5"
+    ],
+    "freq": 28577
+  },
+  {
+    "en": "to contradict oneself; self-contradictory; inconsistent",
+    "cn": "自相矛盾",
+    "py": "zì xiāng máo dùn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28620
+  },
+  {
+    "en": "complacent; self-satisfied",
+    "cn": "自满",
+    "py": "zì mǎn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28624
+  },
+  {
+    "en": "to remove sb from their post; to dismiss",
+    "cn": "罢免",
+    "py": "bà miǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28683
+  },
+  {
+    "en": "a sage; wise and holy man; virtuous ruler; Buddhist lama; wine",
+    "cn": "圣贤",
+    "py": "shèng xián",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28718
+  },
+  {
+    "en": "backbone; spine; Taiwan pr. [jǐ liang]",
+    "cn": "脊梁",
+    "py": "jǐ liáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28720
+  },
+  {
+    "en": "to seek knowledge; to study; to attend college",
+    "cn": "求学",
+    "py": "qiú xué",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28724
+  },
+  {
+    "en": "club; staff; stick",
+    "cn": "棍棒",
+    "py": "gùn bàng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28739
+  },
+  {
+    "en": "to hurry; to hasten; to make haste",
+    "cn": "赶忙",
+    "py": "gǎn máng",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 28753
+  },
+  {
+    "en": "to hesitate",
+    "cn": "踌躇",
+    "py": "chóu chú",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28755
+  },
+  {
+    "en": "city and countryside",
+    "cn": "城乡",
+    "py": "chéng xiāng",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 28758
+  },
+  {
+    "en": "apartment building; residential tower",
+    "cn": "居民楼",
+    "py": "jū mín lóu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28791
+  },
+  {
+    "en": "pronunciation; literary (rather than colloquial) pronunciation of a Chinese character",
+    "cn": "读音",
+    "py": "dú yīn",
+    "levels": [
+      "new-2"
+    ],
+    "freq": 28795
+  },
+  {
+    "en": "amphibious; dual-talented; able to work in two different lines",
+    "cn": "两栖",
+    "py": "liǎng qī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28797
+  },
+  {
+    "en": "curtain",
+    "cn": "帘子",
+    "py": "lián zi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28809
+  },
+  {
+    "en": "to weaken; to attenuate",
+    "cn": "衰减",
+    "py": "shuāi jiǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28810
+  },
+  {
+    "en": "tolerant; generous; magnanimous; thick and broad (build); thick and deep (voice)",
+    "cn": "宽厚",
+    "py": "kuān hòu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28840
+  },
+  {
+    "en": "passed on from ancestors; handed down from generation to generation",
+    "cn": "祖传",
+    "py": "zǔ chuán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28840
+  },
+  {
+    "en": "multicolored; every color under the sun",
+    "cn": "五颜六色",
+    "py": "wǔ yán liù sè",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 28844
+  },
+  {
+    "en": "browser (software)",
+    "cn": "浏览器",
+    "py": "liú lǎn qì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28853
+  },
+  {
+    "en": "to struggle arduously",
+    "cn": "艰苦奋斗",
+    "py": "jiān kǔ fèn dòu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28881
+  },
+  {
+    "en": "to make a sudden turn",
+    "cn": "急转弯",
+    "py": "jí zhuǎn wān",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28882
+  },
+  {
+    "en": "clapper-board; auctioneer's hammer; to beat time with clappers",
+    "cn": "拍板",
+    "py": "pāi bǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28922
+  },
+  {
+    "en": "relatively speaking; comparatively speaking",
+    "cn": "相对而言",
+    "py": "xiāng duì ér yán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28925
+  },
+  {
+    "en": "to pay a New Year call; to wish sb a Happy New Year",
+    "cn": "拜年",
+    "py": "bài nián",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 28932
+  },
+  {
+    "en": "at all times and in all places (idiom)",
+    "cn": "古今中外",
+    "py": "gǔ jīn zhōng wài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28984
+  },
+  {
+    "en": "stratagem",
+    "cn": "计策",
+    "py": "jì cè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 28994
+  },
+  {
+    "en": "tall and straight",
+    "cn": "挺拔",
+    "py": "tǐng bá",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 28996
+  },
+  {
+    "en": "to be surprised; to be amazed; to be stunned",
+    "cn": "惊诧",
+    "py": "jīng chà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29028
+  },
+  {
+    "en": "night market",
+    "cn": "夜市",
+    "py": "yè shì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29040
+  },
+  {
+    "en": "to be out of the question",
+    "cn": "谈不上",
+    "py": "tán bu shàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29056
+  },
+  {
+    "en": "child support payment (after a divorce)",
+    "cn": "抚养费",
+    "py": "fǔ yǎng fèi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29072
+  },
+  {
+    "en": "rice; paddy",
+    "cn": "水稻",
+    "py": "shuǐ dào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29081
+  },
+  {
+    "en": "herdsman",
+    "cn": "牧民",
+    "py": "mù mín",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29102
+  },
+  {
+    "en": "railtrack connection; to integrate into sth; to dock; to connect; to be in step with; to bring into line with; to align",
+    "cn": "接轨",
+    "py": "jiē guǐ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29120
+  },
+  {
+    "en": "to rot; to decay; to become corrupt",
+    "cn": "腐化",
+    "py": "fǔ huà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29148
+  },
+  {
+    "en": "impoverished; lacking; deficient; limited; meager; impoverishment; lack; deficiency",
+    "cn": "贫乏",
+    "py": "pín fá",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 29155
+  },
+  {
+    "en": "to go and visit in an official capacity or for investigation",
+    "cn": "出访",
+    "py": "chū fǎng",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 29179
+  },
+  {
+    "en": "mosquito net",
+    "cn": "蚊帐",
+    "py": "wén zhàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29214
+  },
+  {
+    "en": "thermometer; thermograph",
+    "cn": "温度计",
+    "py": "wēn dù jì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29216
+  },
+  {
+    "en": "usage",
+    "cn": "用法",
+    "py": "yòng fǎ",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 29232
+  },
+  {
+    "en": "to live somewhere as a visitor; to stay with sb as a guest; to sojourn",
+    "cn": "作客",
+    "py": "zuò kè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29234
+  },
+  {
+    "en": "to live in peace and work happily (idiom)",
+    "cn": "安居乐业",
+    "py": "ān jū lè yè",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 29270
+  },
+  {
+    "en": "to separate",
+    "cn": "隔开",
+    "py": "gé kāi",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 29275
+  },
+  {
+    "en": "to jeopardize; to be harmful to; to undermine",
+    "cn": "妨害",
+    "py": "fáng hài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29334
+  },
+  {
+    "en": "to act shamelessly; to refuse to acknowledge that one has lost the game, or made a promise etc; to act dumb; to act as if sth never happened",
+    "cn": "耍赖",
+    "py": "shuǎ lài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29362
+  },
+  {
+    "en": "to pursue unremittingly (idiom); to persevere",
+    "cn": "持之以恒",
+    "py": "chí zhī yǐ héng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29365
+  },
+  {
+    "en": "middle and elementary school",
+    "cn": "中小学",
+    "py": "zhōng xiǎo xué",
+    "levels": [
+      "new-2"
+    ],
+    "freq": 29379
+  },
+  {
+    "en": "family financial situation; family circumstances",
+    "cn": "家境",
+    "py": "jiā jìng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29399
+  },
+  {
+    "en": "in a great rush; in a flurry",
+    "cn": "慌忙",
+    "py": "huāng máng",
+    "levels": [
+      "new-5",
+      "old-6"
+    ],
+    "freq": 29421
+  },
+  {
+    "en": "refined and courteous; urbane",
+    "cn": "彬彬有礼",
+    "py": "bīn bīn yǒu lǐ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29487
+  },
+  {
+    "en": "medicinal ingredient",
+    "cn": "药材",
+    "py": "yào cái",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29493
+  },
+  {
+    "en": "to pull; (fig.) to stimulate (economic activity); to motivate (people to do sth)",
+    "cn": "拉动",
+    "py": "lā dòng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29495
+  },
+  {
+    "en": "elegant; graceful",
+    "cn": "秀美",
+    "py": "xiù měi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29506
+  },
+  {
+    "en": "teaching block; school building",
+    "cn": "教学楼",
+    "py": "jiào xué lóu",
+    "levels": [
+      "new-1"
+    ],
+    "freq": 29517
+  },
+  {
+    "en": "to come up with ideas; to make suggestions; to offer advice",
+    "cn": "出主意",
+    "py": "chū zhǔ yi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29537
+  },
+  {
+    "en": "shade of a tree; Taiwan pr. [shù yìn]",
+    "cn": "树荫",
+    "py": "shù yīn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29574
+  },
+  {
+    "en": "to fly into a rage out of humiliation; to be ashamed into anger (idiom)",
+    "cn": "恼羞成怒",
+    "py": "nǎo xiū chéng nù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29606
+  },
+  {
+    "en": "(fashion) model (loanword)",
+    "cn": "模特儿",
+    "py": "mó tè r",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 29610
+  },
+  {
+    "en": "everything for self and selfish profit (idiom); with no regard for others; selfish; mercenary",
+    "cn": "自私自利",
+    "py": "zì sī zì lì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29615
+  },
+  {
+    "en": "to be pleased beyond one's expectations (idiom); overjoyed at the turn of events",
+    "cn": "喜出望外",
+    "py": "xǐ chū wàng wài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29648
+  },
+  {
+    "en": "stock investor; share trader",
+    "cn": "股民",
+    "py": "gǔ mín",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29691
+  },
+  {
+    "en": "general; broad; sweeping; lacking in detail; vague",
+    "cn": "笼统",
+    "py": "lǒng tǒng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29692
+  },
+  {
+    "en": "fruit tree",
+    "cn": "果树",
+    "py": "guǒ shù",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 29710
+  },
+  {
+    "en": "to eat, drink and be merry (idiom); to abandon oneself to a life of pleasure",
+    "cn": "吃喝玩乐",
+    "py": "chī hē wán lè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29716
+  },
+  {
+    "en": "to resolve; to settle",
+    "cn": "了却",
+    "py": "liǎo què",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29733
+  },
+  {
+    "en": "online friend; Internet user",
+    "cn": "网友",
+    "py": "wǎng yǒu",
+    "levels": [
+      "new-1"
+    ],
+    "freq": 29751
+  },
+  {
+    "en": "can be found everywhere",
+    "cn": "比比皆是",
+    "py": "bǐ bǐ jiē shì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29754
+  },
+  {
+    "en": "optical cable",
+    "cn": "光缆",
+    "py": "guāng lǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29769
+  },
+  {
+    "en": "a place famous for its scenery or historical relics; scenic spot",
+    "cn": "名胜",
+    "py": "míng shèng",
+    "levels": [
+      "new-6",
+      "old-5"
+    ],
+    "freq": 29771
+  },
+  {
+    "en": "staple food",
+    "cn": "主食",
+    "py": "zhǔ shí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29792
+  },
+  {
+    "en": "drop in elevation; (fig.) gap (in wages, expectations etc); disparity",
+    "cn": "落差",
+    "py": "luò chā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29794
+  },
+  {
+    "en": "to make a contribution; to establish; to found; contribution",
+    "cn": "建树",
+    "py": "jiàn shù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29803
+  },
+  {
+    "en": "circus",
+    "cn": "马戏",
+    "py": "mǎ xì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29823
+  },
+  {
+    "en": "to brook no delay; to demand immediate action",
+    "cn": "刻不容缓",
+    "py": "kè bù róng huǎn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 29831
+  },
+  {
+    "en": "axe; hatchet",
+    "cn": "斧子",
+    "py": "fǔ zi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29863
+  },
+  {
+    "en": "thus; if this happens then",
+    "cn": "这样一来",
+    "py": "zhè yàng yī lái",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29867
+  },
+  {
+    "en": "urgent; pressing; imperative",
+    "cn": "急迫",
+    "py": "jí pò",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29873
+  },
+  {
+    "en": "for a long time",
+    "cn": "长期以来",
+    "py": "cháng qī yǐ lái",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29889
+  },
+  {
+    "en": "clippers; scissors; shears",
+    "cn": "剪子",
+    "py": "jiǎn zi",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 29894
+  },
+  {
+    "en": "huge volume",
+    "cn": "海量",
+    "py": "hǎi liàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29897
+  },
+  {
+    "en": "high jump (athletics)",
+    "cn": "跳高",
+    "py": "tiào gāo",
+    "levels": [
+      "new-3"
+    ],
+    "freq": 29918
+  },
+  {
+    "en": "to stir up trouble; to invite disaster",
+    "cn": "惹祸",
+    "py": "rě huò",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 29923
+  },
+  {
+    "en": "to appoint (to a position); appointed",
+    "cn": "聘任",
+    "py": "pìn rèn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29941
+  },
+  {
+    "en": "to sweep a grave (and pay one's respects to the dead person)",
+    "cn": "扫墓",
+    "py": "sǎo mù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29945
+  },
+  {
+    "en": "face glowing (idiom); looking radiant; all smiles",
+    "cn": "容光焕发",
+    "py": "róng guāng huàn fā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29949
+  },
+  {
+    "en": "to sell in advance",
+    "cn": "预售",
+    "py": "yù shòu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29955
+  },
+  {
+    "en": "to practice fraud (idiom); by trickery",
+    "cn": "弄虚作假",
+    "py": "nòng xū zuò jiǎ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29962
+  },
+  {
+    "en": "management fee",
+    "cn": "管理费",
+    "py": "guǎn lǐ fèi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29984
+  },
+  {
+    "en": "to revise the current edition; revised edition",
+    "cn": "改版",
+    "py": "gǎi bǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 29989
+  },
+  {
+    "en": "good quality and cheap; a bargain",
+    "cn": "物美价廉",
+    "py": "wù měi jià lián",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 29995
+  },
+  {
+    "en": "sweet given on a happy occasion (esp. wedding)",
+    "cn": "喜糖",
+    "py": "xǐ táng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30010
+  },
+  {
+    "en": "(of objects) to fall; to drop; to droop; (medicine) to experience tenesmus",
+    "cn": "下坠",
+    "py": "xià zhuì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30023
+  },
+  {
+    "en": "at one's own expense; self-funded",
+    "cn": "自费",
+    "py": "zì fèi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30053
+  },
+  {
+    "en": "stamp collecting; philately",
+    "cn": "集邮",
+    "py": "jí yóu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30092
+  },
+  {
+    "en": "to seek; to pursue; to investigate",
+    "cn": "探求",
+    "py": "tàn qiú",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30109
+  },
+  {
+    "en": "to serve; to wait upon",
+    "cn": "侍候",
+    "py": "shì hòu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30125
+  },
+  {
+    "en": "the gains do not make up for the losses (idiom)",
+    "cn": "得不偿失",
+    "py": "dé bù cháng shī",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 30150
+  },
+  {
+    "en": "New Year (Spring Festival) picture",
+    "cn": "年画",
+    "py": "nián huà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30151
+  },
+  {
+    "en": "blue-collar; blue-collar worker",
+    "cn": "蓝领",
+    "py": "lán lǐng",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 30180
+  },
+  {
+    "en": "to leave the mountain (of a hermit); to come out of obscurity to a government job; to take a leading position",
+    "cn": "出山",
+    "py": "chū shān",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30185
+  },
+  {
+    "en": "to link up; to thread together",
+    "cn": "贯通",
+    "py": "guàn tōng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30186
+  },
+  {
+    "en": "household electric appliance; abbr. for 家用电器",
+    "cn": "家电",
+    "py": "jiā diàn",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 30196
+  },
+  {
+    "en": "greenish-blue; emerald green",
+    "cn": "翠绿",
+    "py": "cuì lǜ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30218
+  },
+  {
+    "en": "to try out; to test",
+    "cn": "试行",
+    "py": "shì xíng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30221
+  },
+  {
+    "en": "survival of the fittest (idiom)",
+    "cn": "优胜劣汰",
+    "py": "yōu shèng liè tài",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 30236
+  },
+  {
+    "en": "to examine sth and make a decision; to screen; to evaluate; to approve",
+    "cn": "审定",
+    "py": "shěn dìng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30256
+  },
+  {
+    "en": "(idiomatic usage) with great difficulty; to have a hard time (convincing sb, relinquishing sth etc); (literal usage) so easy",
+    "cn": "好容易",
+    "py": "hǎo róng yì",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 30322
+  },
+  {
+    "en": "to be buried with or next to dead person (of deceased's partner, or of funerary objects)",
+    "cn": "陪葬",
+    "py": "péi zàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30323
+  },
+  {
+    "en": "to match up; to coincide",
+    "cn": "重合",
+    "py": "chóng hé",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30332
+  },
+  {
+    "en": "thought-provoking; worth thinking over; to provide food for thought",
+    "cn": "耐人寻味",
+    "py": "nài rén xún wèi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30346
+  },
+  {
+    "en": "lit. heaven's law and earth's principle (idiom); fig. right and proper; right and unalterable; a matter of course",
+    "cn": "天经地义",
+    "py": "tiān jīng dì yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30356
+  },
+  {
+    "en": "dense (of plant growth); lush",
+    "cn": "茂密",
+    "py": "mào mì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30360
+  },
+  {
+    "en": "variant of 淳朴",
+    "cn": "纯朴",
+    "py": "chún pǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30382
+  },
+  {
+    "en": "difficult and dangerous; hardships and perils",
+    "cn": "艰险",
+    "py": "jiān xiǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30408
+  },
+  {
+    "en": "honorific: I've long looked forward to meeting you.; It's an honor to meet you at last.",
+    "cn": "久仰",
+    "py": "jiǔ yǎng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30424
+  },
+  {
+    "en": "a bed (on a train); a couchette",
+    "cn": "卧铺",
+    "py": "wò pù",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 30450
+  },
+  {
+    "en": "Chinese painting",
+    "cn": "中国画",
+    "py": "Zhōng guó huà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30455
+  },
+  {
+    "en": "to copy; to transcribe",
+    "cn": "抄写",
+    "py": "chāo xiě",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 30463
+  },
+  {
+    "en": "(idiom) appropriate; apt; just right",
+    "cn": "恰如其分",
+    "py": "qià rú qí fèn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30471
+  },
+  {
+    "en": "invitation card; written invitation",
+    "cn": "请帖",
+    "py": "qǐng tiě",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 30508
+  },
+  {
+    "en": "just a very few (idiom); tiny number; not many at all; You count them on your fingers.",
+    "cn": "寥寥无几",
+    "py": "liáo liáo wú jǐ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30527
+  },
+  {
+    "en": "working procedure; process",
+    "cn": "工序",
+    "py": "gōng xù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30562
+  },
+  {
+    "en": "text",
+    "cn": "课文",
+    "py": "kè wén",
+    "levels": [
+      "new-1"
+    ],
+    "freq": 30576
+  },
+  {
+    "en": "condiments; seasoning",
+    "cn": "佐料",
+    "py": "zuǒ liào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30583
+  },
+  {
+    "en": "to brag about; to flaunt",
+    "cn": "夸耀",
+    "py": "kuā yào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30687
+  },
+  {
+    "en": "to answer a riddle; to guess (i.e. form an opinion without much evidence)",
+    "cn": "猜谜",
+    "py": "cāi mí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30752
+  },
+  {
+    "en": "(often used in the context of diplomacy) to meet with; to pay a visit to; to call on",
+    "cn": "拜会",
+    "py": "bài huì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30764
+  },
+  {
+    "en": "one move, two gains (idiom); two birds with one stone",
+    "cn": "一举两得",
+    "py": "yī jǔ liǎng dé",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 30782
+  },
+  {
+    "en": "to review (a lesson etc)",
+    "cn": "温习",
+    "py": "wēn xí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30799
+  },
+  {
+    "en": "to uphold (e.g. justice or virtue); to promote",
+    "cn": "伸张",
+    "py": "shēn zhāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30806
+  },
+  {
+    "en": "money given to children as a gift on Chinese New Year's Eve",
+    "cn": "压岁钱",
+    "py": "yā suì qián",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 30823
+  },
+  {
+    "en": "shop, firm, or brand of merchandise with a long-established reputation",
+    "cn": "老字号",
+    "py": "lǎo zì hào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30827
+  },
+  {
+    "en": "key information; instructions; it must be borne in mind",
+    "cn": "须知",
+    "py": "xū zhī",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 30839
+  },
+  {
+    "en": "deaf and dumb",
+    "cn": "聋哑",
+    "py": "lóng yǎ",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 30845
+  },
+  {
+    "en": "bustling with activity (idiom)",
+    "cn": "熙熙攘攘",
+    "py": "xī xī rǎng rǎng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30846
+  },
+  {
+    "en": "Taoism; Daoism (Chinese system of beliefs)",
+    "cn": "道教",
+    "py": "Dào jiào",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 30866
+  },
+  {
+    "en": "sesame oil; perfumed oil",
+    "cn": "香油",
+    "py": "xiāng yóu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30870
+  },
+  {
+    "en": "to become rigid",
+    "cn": "僵化",
+    "py": "jiāng huà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30898
+  },
+  {
+    "en": "reasonably priced; inexpensive; to keep prices down; (currency exchange) parity",
+    "cn": "平价",
+    "py": "píng jià",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 30948
+  },
+  {
+    "en": "commentator",
+    "cn": "解说员",
+    "py": "jiě shuō yuán",
+    "levels": [
+      "old-5"
+    ],
+    "freq": 30960
+  },
+  {
+    "en": "bureau chief",
+    "cn": "司长",
+    "py": "sī zhǎng",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 31027
+  },
+  {
+    "en": "(children's) sliding board; a slide",
+    "cn": "滑梯",
+    "py": "huá tī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31034
+  },
+  {
+    "en": "to be hell-bent on; dead set on sth; unswerving",
+    "cn": "死心塌地",
+    "py": "sǐ xīn tā dì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31068
+  },
+  {
+    "en": "(idiom) \"no comment\"",
+    "cn": "无可奉告",
+    "py": "wú kě fèng gào",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31077
+  },
+  {
+    "en": "to crowd around; to escort",
+    "cn": "簇拥",
+    "py": "cù yōng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31080
+  },
+  {
+    "en": "(computing) node in a network; (commerce) sales outlet; branch; service center; (illustration) screentone; halftone dot",
+    "cn": "网点",
+    "py": "wǎng diǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31135
+  },
+  {
+    "en": "to dismiss and replace (sb); to replace (sb or sth)",
+    "cn": "撤换",
+    "py": "chè huàn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31152
+  },
+  {
+    "en": "to take by the arm and assist; to mix; to blend; to dilute; to adulterate",
+    "cn": "搀",
+    "py": "chān",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31166
+  },
+  {
+    "en": "to get together socially; to celebrate; party; celebration",
+    "cn": "欢聚",
+    "py": "huān jù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31178
+  },
+  {
+    "en": "a problem appears; to break down",
+    "cn": "出毛病",
+    "py": "chū máo bìng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31186
+  },
+  {
+    "en": "greenhouse; polytunnel",
+    "cn": "大棚",
+    "py": "dà péng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31236
+  },
+  {
+    "en": "general situation; summary",
+    "cn": "概况",
+    "py": "gài kuàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31253
+  },
+  {
+    "en": "what's frequently heard can be repeated in detail (idiom)",
+    "cn": "耳熟能详",
+    "py": "ěr shú néng xiáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31301
+  },
+  {
+    "en": "to set out; to leave",
+    "cn": "起程",
+    "py": "qǐ chéng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31328
+  },
+  {
+    "en": "unable to change sth; unable to deal with",
+    "cn": "顾不得",
+    "py": "gù bu de",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31355
+  },
+  {
+    "en": "to sneer",
+    "cn": "讥笑",
+    "py": "jī xiào",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31406
+  },
+  {
+    "en": "sharp and clear; crisp; melodious; ringing; tinkling; silvery (of sound); fragile; frail; also written 轻脆",
+    "cn": "清脆",
+    "py": "qīng cuì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31431
+  },
+  {
+    "en": "to revere; to admire",
+    "cn": "瞻仰",
+    "py": "zhān yǎng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31432
+  },
+  {
+    "en": "to stand tall; to tower aloft",
+    "cn": "耸立",
+    "py": "sǒng lì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31433
+  },
+  {
+    "en": "to fall behind; to drop out",
+    "cn": "掉队",
+    "py": "diào duì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31436
+  },
+  {
+    "en": "kindness; affection; grace; favor",
+    "cn": "恩情",
+    "py": "ēn qíng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31449
+  },
+  {
+    "en": "merchant",
+    "cn": "商贾",
+    "py": "shāng gǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31449
+  },
+  {
+    "en": "scholarship; high-level study; to do scholarly research; to pursue a high level of study",
+    "cn": "治学",
+    "py": "zhì xué",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31458
+  },
+  {
+    "en": "virtually the same; differing only on small points",
+    "cn": "大同小异",
+    "py": "dà tóng xiǎo yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31466
+  },
+  {
+    "en": "to consult; to discuss seriously; to negotiate; to confer; negotiations; consultations",
+    "cn": "磋商",
+    "py": "cuō shāng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31471
+  },
+  {
+    "en": "to convert into; to amount to; to be equivalent to",
+    "cn": "折合",
+    "py": "zhé hé",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31485
+  },
+  {
+    "en": "clever; witty; intelligent",
+    "cn": "伶俐",
+    "py": "líng lì",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 31514
+  },
+  {
+    "en": "Sunday",
+    "cn": "礼拜天",
+    "py": "Lǐ bài tiān",
+    "levels": [
+      "old-5"
+    ],
+    "freq": 31517
+  },
+  {
+    "en": "treachery; devious; a rogue",
+    "cn": "奸诈",
+    "py": "jiān zhà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31529
+  },
+  {
+    "en": "to clear a wild area for cultivation; to put under the plow",
+    "cn": "开垦",
+    "py": "kāi kěn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31554
+  },
+  {
+    "en": "with everything needed available",
+    "cn": "一应俱全",
+    "py": "yī yīng jù quán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31560
+  },
+  {
+    "en": "Western-style food",
+    "cn": "西餐",
+    "py": "xī cān",
+    "levels": [
+      "new-2"
+    ],
+    "freq": 31561
+  },
+  {
+    "en": "to play Chinese finger-guessing game",
+    "cn": "豁",
+    "py": "huá",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31567
+  },
+  {
+    "en": "theme song",
+    "cn": "主题歌",
+    "py": "zhǔ tí gē",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31573
+  },
+  {
+    "en": "college; school (old)",
+    "cn": "学堂",
+    "py": "xué táng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31575
+  },
+  {
+    "en": "shadowboxing or Taiji, T'aichi or T'aichichuan; traditional form of physical exercise or relaxation; a martial art",
+    "cn": "太极拳",
+    "py": "tài jí quán",
+    "levels": [
+      "new-7",
+      "old-5"
+    ],
+    "freq": 31592
+  },
+  {
+    "en": "bookcase",
+    "cn": "书柜",
+    "py": "shū guì",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 31619
+  },
+  {
+    "en": "to prevent epidemics",
+    "cn": "防疫",
+    "py": "fáng yì",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31623
+  },
+  {
+    "en": "to be total strangers (idiom)",
+    "cn": "素不相识",
+    "py": "sù bù xiāng shí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31683
+  },
+  {
+    "en": "of the utmost importance; of highest priority",
+    "cn": "重中之重",
+    "py": "zhòng zhōng zhī zhòng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31683
+  },
+  {
+    "en": "to conspire to murder; to plot against sb's life",
+    "cn": "谋害",
+    "py": "móu hài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31751
+  },
+  {
+    "en": "(idiom) take care of everything; handle everything",
+    "cn": "面面俱到",
+    "py": "miàn miàn jù dào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31752
+  },
+  {
+    "en": "to call the wind and summon the rain (idiom); to exercise magical powers; fig. to stir up troubles",
+    "cn": "呼风唤雨",
+    "py": "hū fēng huàn yǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31838
+  },
+  {
+    "en": "parentheses; brackets",
+    "cn": "括号",
+    "py": "kuò hào",
+    "levels": [
+      "new-4"
+    ],
+    "freq": 31869
+  },
+  {
+    "en": "meticulous planning and careful accounting (idiom)",
+    "cn": "精打细算",
+    "py": "jīng dǎ xì suàn",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31904
+  },
+  {
+    "en": "to be unable to find a solution; to be at wits' end",
+    "cn": "一筹莫展",
+    "py": "yī chóu mò zhǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31915
+  },
+  {
+    "en": "to see (the same thing) over and over again; to see, to one's surprise, (sth happen suddenly)",
+    "cn": "只见",
+    "py": "zhǐ jiàn",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 31932
+  },
+  {
+    "en": "granulated sugar",
+    "cn": "砂糖",
+    "py": "shā táng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 31940
+  },
+  {
+    "en": "imperceptible influence; to influence secretly",
+    "cn": "潜移默化",
+    "py": "qián yí mò huà",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 31990
+  },
+  {
+    "en": "rich and powerful",
+    "cn": "富强",
+    "py": "fù qiáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32018
+  },
+  {
+    "en": "to consider everyone else beneath one (idiom); so arrogant that no-one else matters; condescending; to go about with one's nose in the air",
+    "cn": "目中无人",
+    "py": "mù zhōng wú rén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32144
+  },
+  {
+    "en": "to teach by correspondence",
+    "cn": "函授",
+    "py": "hán shòu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32146
+  },
+  {
+    "en": "all previous (meetings, sessions etc)",
+    "cn": "历届",
+    "py": "lì jiè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32173
+  },
+  {
+    "en": "infatuation",
+    "cn": "痴心",
+    "py": "chī xīn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32193
+  },
+  {
+    "en": "competitive; eagerly; to vie",
+    "cn": "竞相",
+    "py": "jìng xiāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32224
+  },
+  {
+    "en": "clothes hanger; clothes rack",
+    "cn": "衣架",
+    "py": "yī jià",
+    "levels": [
+      "new-3"
+    ],
+    "freq": 32226
+  },
+  {
+    "en": "attempting nothing and accomplishing nothing (idiom); without any initiative or drive; feckless",
+    "cn": "无所作为",
+    "py": "wú suǒ zuò wéi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32252
+  },
+  {
+    "en": "outline; essential points",
+    "cn": "纲要",
+    "py": "gāng yào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32270
+  },
+  {
+    "en": "bold; open-minded; heroic",
+    "cn": "豪迈",
+    "py": "háo mài",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32272
+  },
+  {
+    "en": "making up a group, forming a troupe (idiom); in large numbers; as a large crowd",
+    "cn": "成群结队",
+    "py": "chéng qún jié duì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32277
+  },
+  {
+    "en": "motivation; ambition",
+    "cn": "上进心",
+    "py": "shàng jìn xīn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32278
+  },
+  {
+    "en": "qigong, a traditional Chinese system of cultivating vital energy 气 through coordinated breathing, movement and meditation",
+    "cn": "气功",
+    "py": "qì gōng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32300
+  },
+  {
+    "en": "the rising sun",
+    "cn": "旭日",
+    "py": "xù rì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32316
+  },
+  {
+    "en": "to win an honor; to strive to win a prize",
+    "cn": "争光",
+    "py": "zhēng guāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32316
+  },
+  {
+    "en": "garden area",
+    "cn": "园地",
+    "py": "yuán dì",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 32332
+  },
+  {
+    "en": "extroverted (personality); (economics etc) export-oriented",
+    "cn": "外向",
+    "py": "wài xiàng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32377
+  },
+  {
+    "en": "to sob; to whimper",
+    "cn": "呜咽",
+    "py": "wū yè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32446
+  },
+  {
+    "en": "to fall back; to return to low level after a rise (in water level, price etc)",
+    "cn": "回落",
+    "py": "huí luò",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32453
+  },
+  {
+    "en": "up here, down there (idiom); to rise and fall in succession; no sooner one subsides, the next arises; repeating continuously; occurring again and again (of applause, fires, waves, protests, conflicts, uprisings etc)",
+    "cn": "此起彼伏",
+    "py": "cǐ qǐ bǐ fú",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32474
+  },
+  {
+    "en": "wide-ranging",
+    "cn": "宽泛",
+    "py": "kuān fàn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32491
+  },
+  {
+    "en": "vast body of water",
+    "cn": "汪洋",
+    "py": "wāng yáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32495
+  },
+  {
+    "en": "a bright idea suddenly occurs (idiom); to hit upon an inspiration; to be struck by a brainwave",
+    "cn": "灵机一动",
+    "py": "líng jī yī dòng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32503
+  },
+  {
+    "en": "to concentrate one's attention (idiom)",
+    "cn": "聚精会神",
+    "py": "jù jīng huì shén",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 32588
+  },
+  {
+    "en": "epoch-marking",
+    "cn": "划时代",
+    "py": "huà shí dài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32601
+  },
+  {
+    "en": "famous",
+    "cn": "驰名",
+    "py": "chí míng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32609
+  },
+  {
+    "en": "to set foot on; to step on or into",
+    "cn": "踏上",
+    "py": "tà shàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32613
+  },
+  {
+    "en": "foreign language (written)",
+    "cn": "外文",
+    "py": "wài wén",
+    "levels": [
+      "new-3"
+    ],
+    "freq": 32623
+  },
+  {
+    "en": "husband's parents; parents-in-law",
+    "cn": "公婆",
+    "py": "gōng pó",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32691
+  },
+  {
+    "en": "varying from person to person (idiom); different for each individual",
+    "cn": "因人而异",
+    "py": "yīn rén ér yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32691
+  },
+  {
+    "en": "shortcoming; defect; fault; one's weak points",
+    "cn": "短处",
+    "py": "duǎn chù",
+    "levels": [
+      "new-3"
+    ],
+    "freq": 32713
+  },
+  {
+    "en": "to grow (usually of abstract things); to yield; to develop",
+    "cn": "滋长",
+    "py": "zī zhǎng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32742
+  },
+  {
+    "en": "to play truant; to cut classes",
+    "cn": "旷课",
+    "py": "kuàng kè",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 32748
+  },
+  {
+    "en": "pavilion",
+    "cn": "亭子",
+    "py": "tíng zi",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32764
+  },
+  {
+    "en": "is harmful to",
+    "cn": "不利于",
+    "py": "bù lìyú",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32766
+  },
+  {
+    "en": "to wait a moment",
+    "cn": "稍候",
+    "py": "shāo hòu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32771
+  },
+  {
+    "en": "volunteer worker; volunteer work",
+    "cn": "义工",
+    "py": "yì gōng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32774
+  },
+  {
+    "en": "to contain; to accumulate; to embrace; implicit condition; implication; entailment",
+    "cn": "蕴涵",
+    "py": "yùn hán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32795
+  },
+  {
+    "en": "rare and precious; valuable; remarkable",
+    "cn": "难能可贵",
+    "py": "nán néng kě guì",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 32815
+  },
+  {
+    "en": "to agree by chance (idiom); taking the same action without prior consultation",
+    "cn": "不约而同",
+    "py": "bù yuē ér tóng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32822
+  },
+  {
+    "en": "drought",
+    "cn": "旱灾",
+    "py": "hàn zāi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32835
+  },
+  {
+    "en": "simple and unadorned (of art, architecture etc)",
+    "cn": "古朴",
+    "py": "gǔ pǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32851
+  },
+  {
+    "en": "to raise a tough question",
+    "cn": "出难题",
+    "py": "chū nán tí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32878
+  },
+  {
+    "en": "sour, sweet, bitter and spicy hot; fig. the joys and sorrows of life",
+    "cn": "酸甜苦辣",
+    "py": "suān tián kǔ là",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 32890
+  },
+  {
+    "en": "to have a pleasant journey; Bon voyage!",
+    "cn": "一路平安",
+    "py": "yī lù píng ān",
+    "levels": [
+      "new-2"
+    ],
+    "freq": 32899
+  },
+  {
+    "en": "lit. to mend the pen after sheep are lost (idiom); fig. to act belatedly; better late than never; to lock the stable door after the horse has bolted",
+    "cn": "亡羊补牢",
+    "py": "wáng yáng bǔ láo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32906
+  },
+  {
+    "en": "to feed; (fig.) to nurture; to foster",
+    "cn": "哺育",
+    "py": "bǔ yù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32916
+  },
+  {
+    "en": "in the ordinary course of events; ordinarily; normally",
+    "cn": "按说",
+    "py": "àn shuō",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32917
+  },
+  {
+    "en": "(idiom) flourishing; thriving",
+    "cn": "欣欣向荣",
+    "py": "xīn xīn xiàng róng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 32921
+  },
+  {
+    "en": "to burn with impatience; torn with anxiety",
+    "cn": "心急如焚",
+    "py": "xīn jí rú fén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32937
+  },
+  {
+    "en": "bureaucrat; official",
+    "cn": "官吏",
+    "py": "guān lì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 32971
+  },
+  {
+    "en": "substandard products; defective; seconds",
+    "cn": "次品",
+    "py": "cì pǐn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 33111
+  },
+  {
+    "en": "every family (idiom)",
+    "cn": "千家万户",
+    "py": "qiān jiā wàn hù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33124
+  },
+  {
+    "en": "(of a teacher) to prepare lessons",
+    "cn": "备课",
+    "py": "bèi kè",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33147
+  },
+  {
+    "en": "lit. to enter by the back door; fig. to gain influence by pull or unofficial channels; back door or under the counter connections",
+    "cn": "走后门",
+    "py": "zǒu hòu mén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33149
+  },
+  {
+    "en": "lit. to guard a tree-stump, waiting for rabbits (idiom); to wait idly for opportunities; to trust to chance rather than show initiative",
+    "cn": "守株待兔",
+    "py": "shǒu zhū dài tù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33204
+  },
+  {
+    "en": "to change into",
+    "cn": "改为",
+    "py": "gǎi wéi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33250
+  },
+  {
+    "en": "to settle; to set up home",
+    "cn": "落户",
+    "py": "luò hù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33298
+  },
+  {
+    "en": "to take pity on; to feel tenderness toward",
+    "cn": "怜惜",
+    "py": "lián xī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33311
+  },
+  {
+    "en": "military division level commander; teacher",
+    "cn": "师长",
+    "py": "shī zhǎng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33317
+  },
+  {
+    "en": "spellbound; entranced; lost in thought",
+    "cn": "出神",
+    "py": "chū shén",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 33360
+  },
+  {
+    "en": "deathly pale",
+    "cn": "惨白",
+    "py": "cǎn bái",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33380
+  },
+  {
+    "en": "dark green",
+    "cn": "碧绿",
+    "py": "bì lǜ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33401
+  },
+  {
+    "en": "to give up one's seat for sb",
+    "cn": "让座",
+    "py": "ràng zuò",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 33457
+  },
+  {
+    "en": "to leave without saying good-bye",
+    "cn": "不辞而别",
+    "py": "bù cí ér bié",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33466
+  },
+  {
+    "en": "Qingming or Pure Brightness, 5th of the 24 solar terms 二十四节气 5th-19th April; Pure Brightness Festival or Tomb Sweeping Day (in early April)",
+    "cn": "清明",
+    "py": "Qīng míng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33512
+  },
+  {
+    "en": "room temperature; ordinary temperatures",
+    "cn": "常温",
+    "py": "cháng wēn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33525
+  },
+  {
+    "en": "suddenly; abruptly",
+    "cn": "骤然",
+    "py": "zhòu rán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33542
+  },
+  {
+    "en": "in uproar; commotion; causing a storm of protest; tumultuous",
+    "cn": "哗然",
+    "py": "huá rán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33564
+  },
+  {
+    "en": "rushed and muddled",
+    "cn": "忙乱",
+    "py": "máng luàn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33607
+  },
+  {
+    "en": "(informal) note",
+    "cn": "便条",
+    "py": "biàn tiáo",
+    "levels": [
+      "new-5",
+      "old-6"
+    ],
+    "freq": 33655
+  },
+  {
+    "en": "everything is fine except for one small defect (idiom); the fly in the ointment",
+    "cn": "美中不足",
+    "py": "měi zhōng bù zú",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33676
+  },
+  {
+    "en": "(idiom) to act without taking time to think; to react instantly; to fire from the hip",
+    "cn": "不假思索",
+    "py": "bù jiǎ sī suǒ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33772
+  },
+  {
+    "en": "optimistic; sanguine; generous; magnanimous; open-minded",
+    "cn": "豁达",
+    "py": "huò dá",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33799
+  },
+  {
+    "en": "security door",
+    "cn": "防盗门",
+    "py": "fáng dào mén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33898
+  },
+  {
+    "en": "to treat sb with the formal courtesy accorded to a host or a guest",
+    "cn": "见外",
+    "py": "jiàn wài",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33911
+  },
+  {
+    "en": "moody; gloomy",
+    "cn": "烦闷",
+    "py": "fán mèn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33920
+  },
+  {
+    "en": "receipt for a loan; IOU",
+    "cn": "借条",
+    "py": "jiè tiáo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33973
+  },
+  {
+    "en": "(idiom) unprecedented; unheard of",
+    "cn": "前无古人",
+    "py": "qián wú gǔ rén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 33975
+  },
+  {
+    "en": "dynasty; reign (of a king)",
+    "cn": "朝代",
+    "py": "cháo dài",
+    "levels": [
+      "new-7",
+      "old-5"
+    ],
+    "freq": 33998
+  },
+  {
+    "en": "to spend all one's time together (idiom)",
+    "cn": "朝夕相处",
+    "py": "zhāo xī xiāng chǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34005
+  },
+  {
+    "en": "birthday",
+    "cn": "诞辰",
+    "py": "dàn chén",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34026
+  },
+  {
+    "en": "to be in the way; to be a hindrance; (usu. in the negative) to be of consequence; to matter",
+    "cn": "碍事",
+    "py": "ài shì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34045
+  },
+  {
+    "en": "turbid; muddy; dirty",
+    "cn": "混浊",
+    "py": "hùn zhuó",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34085
+  },
+  {
+    "en": "closing ceremony",
+    "cn": "闭幕式",
+    "py": "bì mù shì",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 34114
+  },
+  {
+    "en": "short in time; fleeting; brief; gasping (breath); curt (tone of voice)",
+    "cn": "短促",
+    "py": "duǎn cù",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 34131
+  },
+  {
+    "en": "lonely; secluded",
+    "cn": "僻静",
+    "py": "pì jìng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34171
+  },
+  {
+    "en": "popular song; folk tune; ballad",
+    "cn": "小曲",
+    "py": "xiǎo qǔ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34172
+  },
+  {
+    "en": "unhusked rice; paddy",
+    "cn": "稻谷",
+    "py": "dào gǔ",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 34191
+  },
+  {
+    "en": "depth (from front to rear); depth (into a territory); span (of time); (fig.) depth (of deployment, progress, development etc)",
+    "cn": "纵深",
+    "py": "zòng shēn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34239
+  },
+  {
+    "en": "to sprout; to shoot; to bud",
+    "cn": "萌发",
+    "py": "méng fā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34285
+  },
+  {
+    "en": "dam; dike",
+    "cn": "堤坝",
+    "py": "dī bà",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34295
+  },
+  {
+    "en": "start of month; early in the month",
+    "cn": "月初",
+    "py": "yuè chū",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34296
+  },
+  {
+    "en": "moderate wind, beautiful sun (idiom); fine sunny weather, esp. in springtime",
+    "cn": "风和日丽",
+    "py": "fēng hé rì lì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34338
+  },
+  {
+    "en": "to learn a skill or art",
+    "cn": "学艺",
+    "py": "xué yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34339
+  },
+  {
+    "en": "cleaning agent; detergent",
+    "cn": "洗涤剂",
+    "py": "xǐ dí jì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34376
+  },
+  {
+    "en": "each and every family (idiom); every household",
+    "cn": "家家户户",
+    "py": "jiā jiā hù hù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34377
+  },
+  {
+    "en": "successive years; over many years",
+    "cn": "连年",
+    "py": "lián nián",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 34385
+  },
+  {
+    "en": "with great prospects for the future (idiom); well worth doing",
+    "cn": "大有可为",
+    "py": "dà yǒu kě wéi",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34481
+  },
+  {
+    "en": "folk remedy; home remedy",
+    "cn": "偏方",
+    "py": "piān fāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34502
+  },
+  {
+    "en": "inside information; concrete details",
+    "cn": "底蕴",
+    "py": "dǐ yùn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34522
+  },
+  {
+    "en": "to increase revenue; to increase income by (x amount); to levy (a surcharge, tax increase etc); (of a school) to have an increased student intake",
+    "cn": "增收",
+    "py": "zēng shōu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34528
+  },
+  {
+    "en": "to raise animals",
+    "cn": "畜牧",
+    "py": "xù mù",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 34533
+  },
+  {
+    "en": "reluctant to part (idiom); broken-hearted at having to leave",
+    "cn": "依依不舍",
+    "py": "yī yī bù shě",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34544
+  },
+  {
+    "en": "an opportunity that someone (usually a villain or adversary) can exploit",
+    "cn": "可乘之机",
+    "py": "kě chéng zhī jī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34562
+  },
+  {
+    "en": "an overall plan taking into account all factors",
+    "cn": "统筹兼顾",
+    "py": "tǒng chóu jiān gù",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 34565
+  },
+  {
+    "en": "in a spurt of energy",
+    "cn": "一鼓作气",
+    "py": "yī gǔ zuò qì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34580
+  },
+  {
+    "en": "to be bashful; to feel ashamed",
+    "cn": "害臊",
+    "py": "hài sào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34581
+  },
+  {
+    "en": "to look in all directions (idiom); to glance around",
+    "cn": "东张西望",
+    "py": "dōng zhāng xī wàng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34585
+  },
+  {
+    "en": "(idiom) continuously; in an endless stream",
+    "cn": "络绎不绝",
+    "py": "luò yì bù jué",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34597
+  },
+  {
+    "en": "distribution (business); logistics",
+    "cn": "物流",
+    "py": "wù liú",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34629
+  },
+  {
+    "en": "factory director",
+    "cn": "厂长",
+    "py": "chǎng zhǎng",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 34641
+  },
+  {
+    "en": "to report the loss of something",
+    "cn": "挂失",
+    "py": "guà shī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34670
+  },
+  {
+    "en": "major achievement; great work; triumphant success",
+    "cn": "硕果",
+    "py": "shuò guǒ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34691
+  },
+  {
+    "en": "spare time; free time",
+    "cn": "空儿",
+    "py": "kòng r",
+    "levels": [
+      "new-3"
+    ],
+    "freq": 34728
+  },
+  {
+    "en": "Yangge, a popular rural folk dance",
+    "cn": "秧歌",
+    "py": "yāng ge",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34752
+  },
+  {
+    "en": "to become infuriated; to see red; envious; jealous; covetous; pink eye (conjunctivitis); red-eye (flight)(photography) red eye",
+    "cn": "红眼",
+    "py": "hóng yǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34758
+  },
+  {
+    "en": "to cower; to flinch; to quail; to recoil",
+    "cn": "畏缩",
+    "py": "wèi suō",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34781
+  },
+  {
+    "en": "oversensitive; suspicious",
+    "cn": "多心",
+    "py": "duō xīn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34807
+  },
+  {
+    "en": "disordered and in a mess (idiom); all mixed up and chaotic",
+    "cn": "杂乱无章",
+    "py": "zá luàn wú zhāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34808
+  },
+  {
+    "en": "world-famous (idiom)",
+    "cn": "举世闻名",
+    "py": "jǔ shì wén míng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34810
+  },
+  {
+    "en": "to look anxious (idiom); to look miserable",
+    "cn": "愁眉苦脸",
+    "py": "chóu méi kǔ liǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34813
+  },
+  {
+    "en": "negligent; careless; inadvertent",
+    "cn": "粗心大意",
+    "py": "cū xīn dà yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34849
+  },
+  {
+    "en": "lit. fight minutes, snatch seconds (idiom); a race against time; making every second count",
+    "cn": "争分夺秒",
+    "py": "zhēng fēn duó miǎo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34909
+  },
+  {
+    "en": "dragon boat; imperial boat",
+    "cn": "龙舟",
+    "py": "lóng zhōu",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34927
+  },
+  {
+    "en": "cultural recreation; entertainment",
+    "cn": "文娱",
+    "py": "wén yú",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 34927
+  },
+  {
+    "en": "vehicle number (license plate number, taxi number, bus number, train car number)",
+    "cn": "车号",
+    "py": "chē hào",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 34947
+  },
+  {
+    "en": "hanging one's head dispiritedly (idiom); dejected; crestfallen",
+    "cn": "垂头丧气",
+    "py": "chuí tóu sàng qì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 34963
+  },
+  {
+    "en": "malady; evil; malpractice; drawback; disadvantage",
+    "cn": "弊病",
+    "py": "bì bìng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 34995
+  },
+  {
+    "en": "lit. I dare not (accept the honor); fig. I don't deserve your praise; you flatter me",
+    "cn": "不敢当",
+    "py": "bù gǎn dāng",
+    "levels": [
+      "new-5",
+      "old-6"
+    ],
+    "freq": 35004
+  },
+  {
+    "en": "a heavy load and a long road; fig. to bear heavy responsibilities through a long struggle (cf Confucian Analects, 8.7)",
+    "cn": "任重道远",
+    "py": "rèn zhòng dào yuǎn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35050
+  },
+  {
+    "en": "synthetic fiber",
+    "cn": "化纤",
+    "py": "huà xiān",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35059
+  },
+  {
+    "en": "host; official host (e.g. venue for games or a conference)",
+    "cn": "东道主",
+    "py": "dōng dào zhǔ",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 35077
+  },
+  {
+    "en": "to get one’s courage up; to embolden",
+    "cn": "壮胆",
+    "py": "zhuàng dǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35084
+  },
+  {
+    "en": "Islamic; Muslim; halal (of food); clean; pure",
+    "cn": "清真",
+    "py": "qīng zhēn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35108
+  },
+  {
+    "en": "succession; inheritance; hereditary",
+    "cn": "世袭",
+    "py": "shì xí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35110
+  },
+  {
+    "en": "the traditional Chinese calendar; the lunar calendar",
+    "cn": "农历",
+    "py": "nóng lì",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 35140
+  },
+  {
+    "en": "Take a short while",
+    "cn": "不一会儿",
+    "py": "bù yīhuǐr5",
+    "levels": [
+      "new-2"
+    ],
+    "freq": 35153
+  },
+  {
+    "en": "precious; extremely valuable; (honorific) Please take good care of yourself!",
+    "cn": "珍重",
+    "py": "zhēn zhòng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35184
+  },
+  {
+    "en": "to talk big; to sound off; bombastic; grandiloquent",
+    "cn": "夸夸其谈",
+    "py": "kuā kuā qí tán",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35198
+  },
+  {
+    "en": "to go to the countryside",
+    "cn": "下乡",
+    "py": "xià xiāng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35280
+  },
+  {
+    "en": "copper mine; copper ore",
+    "cn": "铜矿",
+    "py": "tóng kuàng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35317
+  },
+  {
+    "en": "to receive worldwide attention",
+    "cn": "举世瞩目",
+    "py": "jǔ shì zhǔ mù",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 35345
+  },
+  {
+    "en": "would rather...; it would be better...; would prefer",
+    "cn": "宁肯",
+    "py": "nìng kěn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35373
+  },
+  {
+    "en": "to enhance; to promote; to enrich",
+    "cn": "弘扬",
+    "py": "hóng yáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35386
+  },
+  {
+    "en": "to leak (information, secrets etc); to smuggle and evade tax; to suffer shrinkage (partial loss of goods due to theft etc)",
+    "cn": "走漏",
+    "py": "zǒu lòu",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35406
+  },
+  {
+    "en": "people from the same workplace or profession; co-worker; colleague; pop culture enthusiasts who create fan fiction etc",
+    "cn": "同人",
+    "py": "tóng rén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35408
+  },
+  {
+    "en": "resolute; steadfast; stalwart",
+    "cn": "刚毅",
+    "py": "gāng yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35426
+  },
+  {
+    "en": "screw",
+    "cn": "螺丝钉",
+    "py": "luó sī dīng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35456
+  },
+  {
+    "en": "to turn peril into safety (idiom); to avert disaster",
+    "cn": "化险为夷",
+    "py": "huà xiǎn wéi yí",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35462
+  },
+  {
+    "en": "to have a get-together; celebration; party",
+    "cn": "联欢",
+    "py": "lián huān",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 35542
+  },
+  {
+    "en": "attractive and intelligent; charming; elegant",
+    "cn": "俊俏",
+    "py": "jùn qiào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35572
+  },
+  {
+    "en": "peach tree",
+    "cn": "桃树",
+    "py": "táo shù",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 35576
+  },
+  {
+    "en": "to be windy",
+    "cn": "刮风",
+    "py": "guā fēng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35620
+  },
+  {
+    "en": "to go through the motions",
+    "cn": "走过场",
+    "py": "zǒu guò chǎng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35620
+  },
+  {
+    "en": "intentional; deliberate; on purpose",
+    "cn": "成心",
+    "py": "chéng xīn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35628
+  },
+  {
+    "en": "to excite; to thrill; exciting; thrilling; cliff-hanging",
+    "cn": "扣人心弦",
+    "py": "kòu rén xīn xián",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35633
+  },
+  {
+    "en": "open and candid (idiom); straightforward and upright",
+    "cn": "光明磊落",
+    "py": "guāng míng lěi luò",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35648
+  },
+  {
+    "en": "reading room",
+    "cn": "阅览室",
+    "py": "yuè lǎn shì",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 35678
+  },
+  {
+    "en": "a thousand pounds hangs by a thread (idiom); imminent peril; a matter of life or death",
+    "cn": "千钧一发",
+    "py": "qiān jūn yī fà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35703
+  },
+  {
+    "en": "to use discretion; to take circumstances into account; to make allowances pertinent to a situation",
+    "cn": "酌情",
+    "py": "zhuó qíng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35706
+  },
+  {
+    "en": "countless changes; constant permutation",
+    "cn": "千变万化",
+    "py": "qiān biàn wàn huà",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35836
+  },
+  {
+    "en": "full of youthful energy (idiom); vigorous; energetic; a bright spark",
+    "cn": "朝气蓬勃",
+    "py": "zhāo qì péng bó",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 35838
+  },
+  {
+    "en": "erhua variant of 一个劲",
+    "cn": "一个劲儿",
+    "py": "yī gè jìn r",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35871
+  },
+  {
+    "en": "lit. to chop the nail and slice the iron (idiom); fig. resolute and decisive; unhesitating; categorical",
+    "cn": "斩钉截铁",
+    "py": "zhǎn dīng jié tiě",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 35900
+  },
+  {
+    "en": "to make mischief; to play tricks",
+    "cn": "搞鬼",
+    "py": "gǎo guǐ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35904
+  },
+  {
+    "en": "earnestly and sincerely (idiom); with all sincerity",
+    "cn": "诚心诚意",
+    "py": "chéng xīn chéng yì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35928
+  },
+  {
+    "en": "gem; (fig.) rare and valuable item; gem; treasure",
+    "cn": "瑰宝",
+    "py": "guī bǎo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35933
+  },
+  {
+    "en": "cubic meter (unit of volume)",
+    "cn": "立方米",
+    "py": "lì fāng mǐ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35946
+  },
+  {
+    "en": "mooncake (esp. for the Mid-Autumn Festival)",
+    "cn": "月饼",
+    "py": "yuè bǐng",
+    "levels": [
+      "new-5"
+    ],
+    "freq": 35984
+  },
+  {
+    "en": "open letter",
+    "cn": "公开信",
+    "py": "gōng kāi xìn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 35990
+  },
+  {
+    "en": "to prepare a lesson",
+    "cn": "预习",
+    "py": "yù xí",
+    "levels": [
+      "new-3",
+      "old-4"
+    ],
+    "freq": 36044
+  },
+  {
+    "en": "to be unable to say or tell; to not be worth mentioning",
+    "cn": "说不上",
+    "py": "shuō bu shàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36064
+  },
+  {
+    "en": "family love and joy; domestic bliss",
+    "cn": "天伦之乐",
+    "py": "tiān lún zhī lè",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 36076
+  },
+  {
+    "en": "leader",
+    "cn": "带头人",
+    "py": "dài tóu rén",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36083
+  },
+  {
+    "en": "proficiency in a particular field (idiom); skill in a specialized area (idiom)",
+    "cn": "一技之长",
+    "py": "yī jì zhī cháng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36099
+  },
+  {
+    "en": "IOU; certificate of indebtedness",
+    "cn": "欠条",
+    "py": "qiàn tiáo",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36112
+  },
+  {
+    "en": "jet-black; dark",
+    "cn": "乌黑",
+    "py": "wū hēi",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 36237
+  },
+  {
+    "en": "what one has seen and heard; knowledge; one's experience",
+    "cn": "见闻",
+    "py": "jiàn wén",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 36267
+  },
+  {
+    "en": "cross a river in the same boat (idiom); fig. having common interests; obliged to collaborate towards common goals",
+    "cn": "同舟共济",
+    "py": "tóng zhōu gòng jì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36268
+  },
+  {
+    "en": "to strive unremittingly; self-improvement",
+    "cn": "自强不息",
+    "py": "zì qiáng bù xī",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36274
+  },
+  {
+    "en": "lit. to pile up (bricks); to pack; fig. to pad out (writing with fancy phrases); ornate rhetoric",
+    "cn": "堆砌",
+    "py": "duī qì",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36363
+  },
+  {
+    "en": "preface; introductory remarks; preamble; prelude",
+    "cn": "序言",
+    "py": "xù yán",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 36371
+  },
+  {
+    "en": "ruler (measuring instrument)",
+    "cn": "尺子",
+    "py": "chǐ zi",
+    "levels": [
+      "new-4",
+      "old-5"
+    ],
+    "freq": 36385
+  },
+  {
+    "en": "Chinese-style dress; cheongsam",
+    "cn": "旗袍",
+    "py": "qí páo",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 36388
+  },
+  {
+    "en": "to intercede; to plead for sb else",
+    "cn": "说情",
+    "py": "shuō qíng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36421
+  },
+  {
+    "en": "experienced and knowledgeable (idiom)",
+    "cn": "见多识广",
+    "py": "jiàn duō shí guǎng",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 36443
+  },
+  {
+    "en": "to perfect sth that is already outstanding (idiom); constantly improving",
+    "cn": "精益求精",
+    "py": "jīng yì qiú jīng",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 36451
+  },
+  {
+    "en": "entire year; throughout the year; age at death",
+    "cn": "终年",
+    "py": "zhōng nián",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 36457
+  },
+  {
+    "en": "to sneer at sb; to ridicule",
+    "cn": "耻笑",
+    "py": "chǐ xiào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36480
+  },
+  {
+    "en": "to play a small role",
+    "cn": "跑龙套",
+    "py": "pǎo lóng tào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36523
+  },
+  {
+    "en": "calm; unruffled",
+    "cn": "从容不迫",
+    "py": "cóng róng bù pò",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 36570
+  },
+  {
+    "en": "dense",
+    "cn": "稠密",
+    "py": "chóu mì",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 36571
+  },
+  {
+    "en": "to extend as long as; to lengthen out to",
+    "cn": "长达",
+    "py": "cháng dá",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36584
+  },
+  {
+    "en": "loud and clear; resonant",
+    "cn": "洪亮",
+    "py": "hóng liàng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36631
+  },
+  {
+    "en": "the mountain road twists around each new peak (idiom); (of a mountain road) twisting and turning; fig. an opportunity has come unexpectedly; things have taken a new turn",
+    "cn": "峰回路转",
+    "py": "fēng huí lù zhuǎn",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36686
+  },
+  {
+    "en": "to be laughing and playing; to giggle",
+    "cn": "嬉笑",
+    "py": "xī xiào",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36701
+  },
+  {
+    "en": "a crane in a flock of chicken (idiom); way above the common; manifestly superior",
+    "cn": "鹤立鸡群",
+    "py": "hè lì jī qún",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36715
+  },
+  {
+    "en": "sand blown by wind; sandstorm",
+    "cn": "风沙",
+    "py": "fēng shā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36742
+  },
+  {
+    "en": "carefree; offhand; casual",
+    "cn": "大大咧咧",
+    "py": "dà dà liē liē",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36835
+  },
+  {
+    "en": "high tech; high technology",
+    "cn": "高新技术",
+    "py": "gāo xīn jì shù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36865
+  },
+  {
+    "en": "punctuation; a punctuation mark; to punctuate",
+    "cn": "标点",
+    "py": "biāo diǎn",
+    "levels": [
+      "old-5"
+    ],
+    "freq": 36947
+  },
+  {
+    "en": "radiant with joy",
+    "cn": "喜洋洋",
+    "py": "xǐ yáng yáng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36979
+  },
+  {
+    "en": "if; in case; suppose; given ...",
+    "cn": "假使",
+    "py": "jiǎ shǐ",
+    "levels": [
+      "new-7",
+      "old-6"
+    ],
+    "freq": 36984
+  },
+  {
+    "en": "to lecture (on branch of learning)",
+    "cn": "讲学",
+    "py": "jiǎng xué",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 36991
+  },
+  {
+    "en": "(literary) student; scholar",
+    "cn": "学子",
+    "py": "xué zǐ",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 37016
+  },
+  {
+    "en": "down-filled garment",
+    "cn": "羽绒服",
+    "py": "yǔ róng fú",
+    "levels": [
+      "new-5",
+      "old-6"
+    ],
+    "freq": 37036
+  },
+  {
+    "en": "one's native place; place of ancestry; registered birthplace",
+    "cn": "籍贯",
+    "py": "jí guàn",
+    "levels": [
+      "old-6"
+    ],
+    "freq": 37051
+  },
+  {
+    "en": "fine work; carefully and neatly done",
+    "cn": "工整",
+    "py": "gōng zhěng",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 37070
+  },
+  {
+    "en": "lotus",
+    "cn": "荷花",
+    "py": "hé huā",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 37141
+  },
+  {
+    "en": "to increase the specified cruising speed; to pick up speed; to speed up",
+    "cn": "提速",
+    "py": "tí sù",
+    "levels": [
+      "new-7"
+    ],
+    "freq": 37206
+  },
+  {
+    "en": "oral examination; oral test",
+    "cn": "口试",
+    "py": "kǒu shì",
+    "levels": [
+      "new-6"
+    ],
+    "freq": 37233
+  }
+];
+        
+        let currentIndex = 0;
+        let currentData = [...flashcardsData];
+        let revealedCards = new Set();
+        let searchMode = false;
+
+        function updateCard() {
+            const card = currentData[currentIndex];
+            
+            // Update main content
+            document.getElementById('chineseChar').textContent = card.cn;
+            document.getElementById('pinyin').textContent = card.py;
+            document.getElementById('english').textContent = card.en;
+            
+            // Update badges
+            document.getElementById('cardNumber').textContent = `${currentIndex + 1}/${currentData.length}`;
+            
+            // HSK Level badge
+            const levels = card.levels || [];
+            const levelText = levels.length > 0 ? levels.join(', ') : 'HSK';
+            document.getElementById('levelBadge').textContent = levelText;
+            
+            // Frequency badge
+            const freq = card.freq || 0;
+            document.getElementById('freqBadge').textContent = freq > 0 ? `#${freq}` : '';
+            
+            // Progress
+            const searchPrefix = searchMode ? ' [Search]' : '';
+            document.getElementById('progress').textContent = `Card ${currentIndex + 1} of ${currentData.length}${searchPrefix}`;
+            
+            // Reset reveal state
+            const isRevealed = revealedCards.has(currentIndex);
+            updateRevealState(isRevealed);
+            updateStats();
+        }
+
+        function updateRevealState(isRevealed) {
+            const coverBtn = document.getElementById('coverBtn');
+            const revealContent = document.getElementById('revealContent');
+            
+            if (isRevealed) {
+                coverBtn.classList.add('hidden');
+                revealContent.classList.add('visible');
+            } else {
+                coverBtn.classList.remove('hidden');
+                revealContent.classList.remove('visible');
+            }
+        }
+
+        function revealAnswer(e) {
+            e.stopPropagation();
+            revealedCards.add(currentIndex);
+            updateRevealState(true);
+            updateStats();
+        }
+
+        function updateStats() {
+            const pct = Math.round((revealedCards.size / currentData.length) * 100);
+            document.getElementById('stats').textContent = 
+                `Revealed: ${revealedCards.size}/${currentData.length} (${pct}%) • Space=Reveal • ←→=Navigate`;
+        }
+
+        function revealAll(e) {
+            e.stopPropagation();
+            for (let i = 0; i < currentData.length; i++) revealedCards.add(i);
+            updateRevealState(true);
+            updateStats();
+        }
+
+        function hideAll(e) {
+            e.stopPropagation();
+            revealedCards.clear();
+            updateRevealState(false);
+            updateStats();
+        }
+
+        function nextCard(e) {
+            if(e) e.stopPropagation();
+            currentIndex = (currentIndex + 1) % currentData.length;
+            updateCard();
+        }
+
+        function prevCard(e) {
+            if(e) e.stopPropagation();
+            currentIndex = (currentIndex - 1 + currentData.length) % currentData.length;
+            updateCard();
+        }
+
+        function jumpToCard(e) {
+            if (e.key === 'Enter') {
+                const num = parseInt(e.target.value);
+                if (num >= 1 && num <= currentData.length) {
+                    currentIndex = num - 1;
+                    updateCard();
+                    e.target.value = '';
+                }
+            }
+        }
+
+        function jumpToCardButton(e) {
+            e.stopPropagation();
+            const input = document.getElementById('jumpInput');
+            const num = parseInt(input.value);
+            if (num >= 1 && num <= currentData.length) {
+                currentIndex = num - 1;
+                updateCard();
+                input.value = '';
+            }
+        }
+
+        function shuffleCards(e) {
+            e.stopPropagation();
+            revealedCards.clear();
+            // Fisher-Yates shuffle
+            for (let i = currentData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentData[i], currentData[j]] = [currentData[j], currentData[i]];
+            }
+            currentIndex = 0;
+            updateCard();
+        }
+
+        function searchCards() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!query) {
+                if (searchMode) {
+                    searchMode = false;
+                    currentData = [...flashcardsData];
+                    currentIndex = 0;
+                    revealedCards.clear();
+                    updateCard();
+                    document.getElementById('filterInfo').textContent = 'HSK Vocabulary Deck (Surnames Excluded)';
+                }
+                return;
+            }
+            
+            const results = flashcardsData.filter((card, idx) => {
+                const enMatch = card.en.toLowerCase().includes(query);
+                const cnMatch = card.cn.includes(query);
+                const pyMatch = card.py.toLowerCase().includes(query);
+                const levelMatch = (card.levels || []).some(l => l.toLowerCase().includes(query));
+                return enMatch || cnMatch || pyMatch || levelMatch;
+            });
+            
+            if (results.length > 0) {
+                searchMode = true;
+                currentData = results;
+                currentIndex = 0;
+                revealedCards.clear();
+                updateCard();
+                document.getElementById('filterInfo').textContent = `Search: "${query}" (${results.length} results)`;
+            } else {
+                document.getElementById('filterInfo').textContent = `No results for "${query}"`;
+            }
+        }
+
+        function toggleView(e) {
+            e.stopPropagation();
+            const grid = document.getElementById('gridView');
+            const container = document.getElementById('cardContainer');
+            const controls = document.querySelector('.controls');
+            const progress = document.querySelector('.progress');
+            const stats = document.querySelector('.stats');
+            const search = document.querySelector('.search-box');
+            const filter = document.querySelector('.filter-info');
+            
+            if (grid.style.display === 'none' || grid.style.display === '') {
+                // Build grid
+                grid.innerHTML = currentData.map((card, idx) => {
+                    const levels = (card.levels || []).join(', ');
+                    return `
+                    <div class="grid-card">
+                        <div class="grid-level">${levels}</div>
+                        <div class="chinese-char">${card.cn}</div>
+                        <button class="grid-cover-btn" id="grid-btn-${idx}" onclick="event.stopPropagation(); revealGrid(${idx})">
+                            👆 Reveal
+                        </button>
+                        <div class="grid-reveal-content" id="grid-reveal-${idx}">
+                            <div class="pinyin">${card.py}</div>
+                            <div class="english">${card.en}</div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+                
+                // Restore revealed state
+                revealedCards.forEach(idx => {
+                    const btn = document.getElementById(`grid-btn-${idx}`);
+                    const content = document.getElementById(`grid-reveal-${idx}`);
+                    if (btn && content) {
+                        btn.classList.add('hidden');
+                        content.classList.add('visible');
+                    }
+                });
+                
+                grid.style.display = 'grid';
+                container.style.display = 'none';
+                controls.style.display = 'none';
+                progress.style.display = 'none';
+                stats.style.display = 'none';
+                search.style.display = 'none';
+                if(filter) filter.style.display = 'none';
+                e.target.textContent = '🎴 Card View';
+            } else {
+                grid.style.display = 'none';
+                container.style.display = 'block';
+                controls.style.display = 'flex';
+                progress.style.display = 'block';
+                stats.style.display = 'block';
+                search.style.display = 'block';
+                if(filter) filter.style.display = 'block';
+                e.target.textContent = '📋 Grid View';
+            }
+        }
+
+        function revealGrid(idx) {
+            revealedCards.add(idx);
+            const btn = document.getElementById(`grid-btn-${idx}`);
+            const content = document.getElementById(`grid-reveal-${idx}`);
+            if (btn && content) {
+                btn.classList.add('hidden');
+                content.classList.add('visible');
+            }
+            updateStats();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+            
+            switch(e.key) {
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextCard();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    prevCard();
+                    break;
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    if (!revealedCards.has(currentIndex)) {
+                        revealAnswer({ stopPropagation: () => {} });
+                    }
+                    break;
+            }
+        });
+
+        // Initialize
+        updateCard();
+    </script>
+</body>
+</html>
