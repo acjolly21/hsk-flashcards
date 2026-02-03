@@ -38,22 +38,6 @@
             text-align: center;
         }
         
-        .search-box {
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            outline: none;
-        }
-        
         .flashcard-container {
             width: 350px;
             height: 500px;
@@ -68,7 +52,7 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             padding: 40px;
             position: relative;
@@ -78,28 +62,29 @@
             font-family: 'Noto Serif SC', serif;
             font-size: 140px;
             color: #2d3748;
-            margin-bottom: 40px;
             line-height: 1;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
-            margin-top: -20px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            flex-shrink: 0;
         }
         
         .hidden-area {
             position: relative;
             width: 100%;
-            height: 140px;
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-top: 10px;
+            min-height: 0;
         }
         
         .cover-button {
             position: absolute;
-            top: 0;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             width: 280px;
             height: 120px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -120,18 +105,18 @@
         }
         
         .cover-button:hover {
-            transform: translateX(-50%) translateY(-2px);
+            transform: translate(-50%, -50%) translateY(-2px);
             box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
         }
         
         .cover-button:active {
-            transform: translateX(-50%) translateY(0);
+            transform: translate(-50%, -50%) translateY(0);
         }
         
         .cover-button.hidden {
             opacity: 0;
             pointer-events: none;
-            transform: translateX(-50%) scale(0.8);
+            transform: translate(-50%, -50%) scale(0.8);
         }
         
         .cover-icon {
@@ -147,10 +132,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             opacity: 0;
             transform: translateY(10px);
             transition: all 0.4s ease;
             width: 100%;
+            max-height: 100%;
+            overflow: hidden;
         }
         
         .reveal-content.visible {
@@ -163,21 +151,33 @@
             color: #667eea;
             font-weight: 300;
             letter-spacing: 3px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: center;
+            flex-shrink: 0;
         }
         
         .english {
-            font-size: 18px;
             color: #4a5568;
             font-weight: 600;
             text-transform: none;
             letter-spacing: 0.5px;
             text-align: center;
             line-height: 1.4;
-            max-width: 100%;
+            width: 100%;
             word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: var(--english-font-size, 18px);
+            max-height: 120px;
+            overflow-y: auto;
         }
+        
+        /* Dynamic font size classes */
+        .english.size-xl { --english-font-size: 22px; }
+        .english.size-lg { --english-font-size: 20px; }
+        .english.size-md { --english-font-size: 18px; }
+        .english.size-sm { --english-font-size: 16px; }
+        .english.size-xs { --english-font-size: 14px; }
+        .english.size-xxs { --english-font-size: 12px; }
         
         .card-number {
             position: absolute;
@@ -247,12 +247,6 @@
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
         }
         
         .reveal-all-btn {
@@ -390,26 +384,21 @@
             }
             .chinese-char {
                 font-size: 100px;
+                margin-bottom: 20px;
             }
             .cover-button {
                 width: 260px;
-                height: 110px;
+                height: 100px;
             }
-            .english {
-                font-size: 16px;
+            .pinyin {
+                font-size: 28px;
             }
         }
     </style>
 </head>
 <body>
     <h1>🀄 HSK Flashcards - Set 22</h1>
-    <div class="filter-info" id="filterInfo">HSK Vocabulary Deck (Surnames Excluded)</div>
-    
-    <!--
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="🔍 Search English, Chinese, or Pinyin..." onkeyup="searchCards()">
-    </div>
-    -->
+    <div class="filter-info" id="filterInfo">HSK Vocabulary Deck</div>
     
     <div class="progress" id="progress">Card 1 of 500</div>
     <div class="stats" id="stats">Revealed: 0/500 | Space=Reveal • ←→=Navigate</div>
@@ -5041,7 +5030,35 @@
             // Reset reveal state
             const isRevealed = revealedCards.has(currentIndex);
             updateRevealState(isRevealed);
+            
+            // Apply dynamic font sizing
+            adjustFontSize(card.en);
+            
             updateStats();
+        }
+
+        function adjustFontSize(text) {
+            const englishEl = document.getElementById('english');
+            
+            // Remove all size classes
+            englishEl.classList.remove('size-xl', 'size-lg', 'size-md', 'size-sm', 'size-xs', 'size-xxs');
+            
+            // Calculate length and apply appropriate size
+            const length = text.length;
+            
+            if (length < 20) {
+                englishEl.classList.add('size-xl');      // 22px - very short
+            } else if (length < 40) {
+                englishEl.classList.add('size-lg');      // 20px - short
+            } else if (length < 60) {
+                englishEl.classList.add('size-md');      // 18px - medium
+            } else if (length < 80) {
+                englishEl.classList.add('size-sm');      // 16px - long
+            } else if (length < 120) {
+                englishEl.classList.add('size-xs');      // 14px - very long
+            } else {
+                englishEl.classList.add('size-xxs');     // 12px - extremely long
+            }
         }
 
         function updateRevealState(isRevealed) {
@@ -5121,48 +5138,12 @@
         function shuffleCards(e) {
             e.stopPropagation();
             revealedCards.clear();
-            // Fisher-Yates shuffle
             for (let i = currentData.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [currentData[i], currentData[j]] = [currentData[j], currentData[i]];
             }
             currentIndex = 0;
             updateCard();
-        }
-
-        function searchCards() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            if (!query) {
-                if (searchMode) {
-                    searchMode = false;
-                    currentData = [...flashcardsData];
-                    currentIndex = 0;
-                    revealedCards.clear();
-                    updateCard();
-                    document.getElementById('filterInfo').textContent = 'HSK Vocabulary Deck (Surnames Excluded)';
-                }
-                return;
-            }
-            
-            const results = flashcardsData.filter((card, idx) => {
-                const enMatch = card.en.toLowerCase().includes(query);
-                const cnMatch = card.cn.includes(query);
-                const pyMatch = card.py.toLowerCase().includes(query);
-                const levelMatch = (card.levels || []).some(l => l.toLowerCase().includes(query));
-                return enMatch || cnMatch || pyMatch || levelMatch;
-            });
-            
-            if (results.length > 0) {
-                searchMode = true;
-                currentData = results;
-                currentIndex = 0;
-                revealedCards.clear();
-                updateCard();
-                document.getElementById('filterInfo').textContent = `Search: "${query}" (${results.length} results)`;
-            } else {
-                document.getElementById('filterInfo').textContent = `No results for "${query}"`;
-            }
         }
 
         function toggleView(e) {
@@ -5172,7 +5153,6 @@
             const controls = document.querySelector('.controls');
             const progress = document.querySelector('.progress');
             const stats = document.querySelector('.stats');
-            const search = document.querySelector('.search-box');
             const filter = document.querySelector('.filter-info');
             
             if (grid.style.display === 'none' || grid.style.display === '') {
@@ -5209,7 +5189,6 @@
                 controls.style.display = 'none';
                 progress.style.display = 'none';
                 stats.style.display = 'none';
-                search.style.display = 'none';
                 if(filter) filter.style.display = 'none';
                 e.target.textContent = '🎴 Card View';
             } else {
@@ -5218,7 +5197,6 @@
                 controls.style.display = 'flex';
                 progress.style.display = 'block';
                 stats.style.display = 'block';
-                search.style.display = 'block';
                 if(filter) filter.style.display = 'block';
                 e.target.textContent = '📋 Grid View';
             }
